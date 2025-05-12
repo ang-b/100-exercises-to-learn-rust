@@ -11,3 +11,70 @@
 // Integration here has a very specific meaning: they test **the public API** of your project.
 // You'll need to pay attention to the visibility of your types and methods; integration
 // tests can't access private or `pub(crate)` items.
+pub struct Order {
+    product_name: String,
+    quantity: u32,
+    unit_price: u32,
+}
+
+fn validate_order_name(name: &String) {
+    if name.is_empty() ||  name.len() > 300 {
+        panic!("Invalid product name")
+    }
+}
+
+fn validate_order_quantity(quantity: &u32) {
+    if *quantity == 0 {
+        panic!("Qauntity must be strictly positive")
+    }
+}
+
+fn validate_order_price(price: &u32) {
+    if *price == 0 {
+        panic!("Price must be strictly positive")
+    }
+}
+
+impl Order {
+    pub fn new(name: String, quantity: u32, price: u32) -> Self {
+        validate_order_name(&name);
+        validate_order_quantity(&quantity);
+        validate_order_price(&price);
+        Self {
+            product_name: name, 
+            quantity, 
+            unit_price: price
+        }
+    }
+
+    pub fn product_name(&self) -> &String {
+        &self.product_name
+    }
+
+    pub fn set_product_name(&mut self, s: String) {
+        validate_order_name(&s);
+        self.product_name = s;
+    }
+    
+    pub fn quantity(&self) -> &u32 {
+        &self.quantity
+    }
+
+    pub fn set_quantity(&mut self, q: u32) {
+        validate_order_quantity(&q);
+        self.quantity = q;
+    }
+
+    pub fn unit_price(&self) -> &u32 {
+        &self.unit_price
+    }
+
+    pub fn set_unit_price(&mut self, p: u32) {
+        validate_order_price(&p);
+        self.unit_price = p;
+    }
+
+    pub fn total(&self) -> u32 {
+        self.unit_price * self.quantity
+    }
+}
