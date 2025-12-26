@@ -10,40 +10,59 @@
 //
 // We expect `fibonacci(0)` to return `0`, `fibonacci(1)` to return `1`,
 // `fibonacci(2)` to return `1`, and so on.
-pub fn fibonacci(n: u32) -> u32 {
+pub fn fibonacci(n: u32, memo: &mut Vec<Option<u32>> ) -> u32 {
     // TODO: implement the `fibonacci` function
     //
     // Hint: use a `Vec` to memoize the results you have already calculated
     // so that you don't have to recalculate them several times.
-    todo!()
+    if n == 0  {
+        return 0;
+    }
+    if n == 1  {
+        return 1;
+    }
+    match memo[n as usize] {
+        Some(x) => return x,
+        None => {
+            let x = fibonacci(n - 1, memo) + fibonacci(n - 2, memo);
+            memo.insert(n as usize, Some(x));
+            return x
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::fibonacci;
-
+    
+    
     #[test]
     fn first() {
-        assert_eq!(fibonacci(0), 0);
+        let mut memo: Vec<Option<u32>> = vec![None; 1];
+        assert_eq!(fibonacci(0, &mut memo), 0);
     }
-
+    
     #[test]
     fn second() {
-        assert_eq!(fibonacci(1), 1);
+        let mut memo = vec![None; 1];
+        assert_eq!(fibonacci(1, &mut memo), 1);
     }
-
+    
     #[test]
     fn third() {
-        assert_eq!(fibonacci(2), 1);
+        let mut memo: Vec<Option<u32>> = vec![None; 3];
+        assert_eq!(fibonacci(2, &mut memo), 1);
     }
-
+    
     #[test]
     fn tenth() {
-        assert_eq!(fibonacci(10), 55);
+        let mut memo: Vec<Option<u32>> = vec![None; 11];
+        assert_eq!(fibonacci(10, &mut memo), 55);
     }
-
+    
     #[test]
     fn thirtieth() {
-        assert_eq!(fibonacci(30), 832040);
+        let mut memo: Vec<Option<u32>> = vec![None; 31];
+        assert_eq!(fibonacci(30, &mut memo), 832040);
     }
 }
